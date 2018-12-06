@@ -4,6 +4,7 @@
  *  modify this file, but it can be used to extend your development
  *  environment.
  */
+ import { session } from 'electron'
 
 /* eslint-disable */
 

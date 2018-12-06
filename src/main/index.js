@@ -25,6 +25,8 @@ function createWindow () {
 
   mainWindow.loadURL(winURL)
 
+  mainWindow.show()
+  
   mainWindow.on('closed', () => {
     mainWindow = null
   })
