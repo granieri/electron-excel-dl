@@ -1,128 +1,109 @@
 <template>
-  <div id="wrapper">
-    <img id="logo" src="~@/assets/logo.png" alt="electron-vue">
-    <main>
-      <div class="left-side">
-        <span class="title">
-          Welcome to your new project!
-        </span>
-        <system-information></system-information>
-      </div>
+<div class="wrapper">
+  <button>make</button>
+  <h2>processes</h2>
+  <table>
+    <thead>
+      <tr>
+        <td>Job</td>
+        <td>Status</td>
+        <td>Start time</td>
+        <td>End time</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="p in process">
+        <td :class="{ lag: p.LAGGING }"> {{ p.NAME }} </td>
+        <td> {{ p.STATUS }} </td>
+        <td> {{ p.START_TIME }} </td>
+        <td> {{ p.END_TIME }}</td>
+      </tr>
+    </tbody>
+  </table>
 
-      <div class="right-side">
-        <div class="doc">
-          <div class="title">Getting Started</div>
-          <p>
-            electron-vue comes packed with detailed documentation that covers everything from
-            internal configurations, using the project structure, building your application,
-            and so much more.
-          </p>
-          <button @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')">Read the Docs</button><br><br>
-        </div>
-        <div class="doc">
-          <div class="title alt">Other Documentation</div>
-          <button class="alt" @click="open('https://electron.atom.io/docs/')">Electron</button>
-          <button class="alt" @click="open('https://vuejs.org/v2/guide/')">Vue.js</button>
-        </div>
-      </div>
-    </main>
-  </div>
+  <h2>metadata</h2>
+  <table>
+    <thead>
+      <tr>
+        <td>Job</td>
+        <td>Status</td>
+        <td>Start time</td>
+        <td>End time</td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="m in metadata">
+        <td :class="{ lag: m.LAGGING }"> {{ m.NAME }} </td>
+        <td> {{ m.STATUS }} </td>
+        <td> {{ m.START_TIME }} </td>
+        <td> {{ m.END_TIME }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 </template>
 
 <script>
-  import SystemInformation from './LandingPage/SystemInformation'
+import * as xl from '../excel'
 
-  export default {
-    name: 'landing-page',
-    components: { SystemInformation },
-    methods: {
-      open (link) {
-        this.$electron.shell.openExternal(link)
-      }
+export default {
+  name: 'landing-page',
+  data() {
+    return {
+      process: {
+        '123': {
+          'NAME': 'Sample',
+          'STATUS': 'Running',
+          'START_TIME': '2018-12-05 06:04:53',
+          'END_TIME': '',
+          'LAGGING': true
+        },
+        '456': {
+          'NAME': 'Another sample',
+          'STATUS': 'Running',
+          'START_TIME': '2018-12-05 06:04:53',
+          'END_TIME': '',
+          'LAGGING': true
+        },
+      },
+      metadata: {
+        '123': {
+          'NAME': 'Example',
+          'STATUS': 'Running',
+          'START_TIME': '2018-12-05 07:04:33',
+          'END_TIME': '',
+          'LAGGING': false
+        },
+        '456': {
+          'NAME': 'Another Example',
+          'STATUS': 'Completed',
+          'START_TIME': '2018-12-05 07:05:00',
+          'END_TIME': '2018-12-05 07:15:47',
+          'LAGGING': true
+        }
+      },
+      process_ids: ['123', '456'],
+      metadata_ids: ['123', '456']
+    }
+  },
+  methods: {
+    open (link) {
+      this.$electron.shell.openExternal(link)
     }
   }
+}
 </script>
 
 <style>
-  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro');
+body {
+  font-family: 'Roboto', sans-serif;
+}
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+td {
+  padding: 5px;
+}
 
-  body { font-family: 'Source Sans Pro', sans-serif; }
-
-  #wrapper {
-    background:
-      radial-gradient(
-        ellipse at top left,
-        rgba(255, 255, 255, 1) 40%,
-        rgba(229, 229, 229, .9) 100%
-      );
-    height: 100vh;
-    padding: 60px 80px;
-    width: 100vw;
-  }
-
-  #logo {
-    height: auto;
-    margin-bottom: 20px;
-    width: 420px;
-  }
-
-  main {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  main > div { flex-basis: 50%; }
-
-  .left-side {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .welcome {
-    color: #555;
-    font-size: 23px;
-    margin-bottom: 10px;
-  }
-
-  .title {
-    color: #2c3e50;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 6px;
-  }
-
-  .title.alt {
-    font-size: 18px;
-    margin-bottom: 10px;
-  }
-
-  .doc p {
-    color: black;
-    margin-bottom: 10px;
-  }
-
-  .doc button {
-    font-size: .8em;
-    cursor: pointer;
-    outline: none;
-    padding: 0.75em 2em;
-    border-radius: 2em;
-    display: inline-block;
-    color: #fff;
-    background-color: #4fc08d;
-    transition: all 0.15s ease;
-    box-sizing: border-box;
-    border: 1px solid #4fc08d;
-  }
-
-  .doc button.alt {
-    color: #42b983;
-    background-color: transparent;
-  }
+.lag {
+  color: red;
+}
 </style>
