@@ -28,7 +28,7 @@ export function generate_workbook(tasks) {
 
     table_col.header = 'Job'
     status_col.header = 'Status'
-    runtime_col.header = 'Runtime (min)'
+    runtime_col.header = 'Runtime'
     lf_col.header = 'High runtime flag'
     hrf_col.header = 'Lagging flag'
 
@@ -36,13 +36,14 @@ export function generate_workbook(tasks) {
       let id = task.ids[job]
       let name = task.status[id].NAME
       let status = task.status[id].STATUS
-      let start_ts = new Date(task.status[id].START_TIME)
+      let start_ts = new Date(task.status[id].START_TIME + 'Z')
       let end_ts = new Date(task.status[id].END_TIME + 'Z')
       let runtime = Boolean(task.status[id].END_TIME) ?  end_ts.getTime() - start_ts:now.getTime() - start_ts.getTime()
-      runtime /= 60
+      runtime = Math.round(runtime/60000)
       let hrf = runtime > 15 ? 1:0
       let lf = task.status[id].LAGGING ? 1:0
-      ws.addRow([name, status, runtime, hrf, lf]);
+      let runtimes = Math.floor(runtime/60) + 'h ' + runtime % 60 + 'm'
+      ws.addRow([name, status, runtimes, hrf, lf]);
     }
   }
   return wb
