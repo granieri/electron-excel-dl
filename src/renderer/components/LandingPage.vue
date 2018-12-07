@@ -99,11 +99,24 @@ export default {
       const remote = require('electron').remote
       const {dialog} = remote.require('electron')
       let now = new Date()
-      let wb = xl.generate_workbook(this.process, this.process_ids, this.metadata, this.metadata_ids)
+
+      let tasks = [
+        {
+          status: this.process,
+          ids: this.process_ids,
+          taskname: 'Process streaming'
+        },
+        {
+          status: this.metadata,
+          ids: this.metadata_ids,
+          taskname: 'Metadata streaming'
+        }
+      ]
+
+      let wb = xl.generate_workbook(tasks)
       let filename = 'report_' + now.getTime() + '.xlsx'
       let tmp_path = tempy.file({name: filename})
       let fs_stream = fs.createWriteStream(tmp_path)
-      console.log(tmp_path)
       wb.xlsx.write(fs_stream)
       .then(function() {
         let win = require('electron').remote.getCurrentWindow()
