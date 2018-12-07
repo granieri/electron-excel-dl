@@ -102,15 +102,14 @@ export default {
       let wb = xl.generate_workbook(this.process, this.process_ids, this.metadata, this.metadata_ids)
       let filename = 'report_' + now.getTime() + '.xlsx'
       let tmp_path = tempy.file({name: filename})
-      fs.open(tmp_path, 'w', function() {})
-      wb.xlsx.writeFile(tmp_path)
+      let fs_stream = fs.createWriteStream(tmp_path)
+      console.log(tmp_path)
+      wb.xlsx.write(fs_stream)
       .then(function() {
         let win = require('electron').remote.getCurrentWindow()
         let save_to = dialog.showSaveDialog(win, {defaultPath: filename})
         if(save_to){
-          fs.writeFile(save_to, tmp_path, (err) => {
-            if(err) throw err;
-          })
+          fs.createReadStream(tmp_path).pipe(fs.createWriteStream(save_to));
         }
         else {
           console.log('file save operation canceled')
