@@ -39,6 +39,7 @@ export function generate_workbook(process, process_ids, metadata, metadata_ids) 
     let start_ts = new Date(process[id].START_TIME)
     let end_ts = new Date(process[id].END_TIME + 'Z')
     let runtime = Boolean(process[id].END_TIME) ?  end_ts.getTime() - start_ts:now.getTime() - start_ts.getTime()
+    runtime /= 60
     let hrf = runtime > 15 ? 1:0
     let lf = process[id].LAGGING ? 1:0
     process_streaming_ws.addRow([name, status, runtime, hrf, lf]);
@@ -74,6 +75,7 @@ export function generate_workbook(process, process_ids, metadata, metadata_ids) 
     let start_ts = new Date(metadata[id].START_TIME + 'Z')
     let end_ts = new Date(metadata[id].END_TIME + 'Z')
     let runtime = Boolean(metadata[id].END_TIME) ?  end_ts.getTime() - start_ts:now.getTime() - start_ts.getTime()
+    runtime /= 60
     let hrf = runtime > 15 ? 1:0
     let lf = metadata[id].LAGGING ? 1:0
     metadata_streaming_ws.addRow([name, status, runtime, hrf, lf]);

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, dialog } from 'electron'
 require('electron-dl')({saveAs: true});
 
 
@@ -32,6 +32,22 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  mainWindow.webContents.session.on('will-download', (event, downloadItem, webContents) => {
+
+    var fileName = dialog.showSaveDialog({
+      defaultPath: defaultFileName,
+      filters: [
+        { name: 'Excel', extensions: ['xlsx'] }]
+    });
+
+    if (typeof fileName == "undefined") {
+      downloadItem.cancel()
+    }
+    else {
+      downloadItem.setSavePath(fileName);
+    }
+  });
 }
 
 app.on('ready', createWindow)

@@ -45,9 +45,11 @@
 
 <script>
 import * as xl from '../excel'
-import electrondl from 'electron-dl'
+//import electrondl from 'electron-dl'
 import exceljs from 'exceljs'
 import fs from 'fs'
+import tempy from 'tempy'
+
 
 export default {
   name: 'landing-page',
@@ -57,14 +59,14 @@ export default {
         '123': {
           'NAME': 'Sample',
           'STATUS': 'Running',
-          'START_TIME': '2018-12-05 06:04:53',
+          'START_TIME': '2018-12-07 06:04:53',
           'END_TIME': '',
           'LAGGING': true
         },
         '456': {
           'NAME': 'Another sample',
           'STATUS': 'Running',
-          'START_TIME': '2018-12-05 06:04:53',
+          'START_TIME': '2018-12-07 06:04:53',
           'END_TIME': '',
           'LAGGING': true
         },
@@ -73,7 +75,7 @@ export default {
         '123': {
           'NAME': 'Example',
           'STATUS': 'Running',
-          'START_TIME': '2018-12-05 07:04:33',
+          'START_TIME': '2018-12-07 07:04:33',
           'END_TIME': '',
           'LAGGING': false
         },
@@ -94,17 +96,20 @@ export default {
       this.$electron.shell.openExternal(link)
     },
     excelize() {
+      const remote = require('electron').remote
+      const {dialog} = remote.require('electron')
+      let now = new Date()
       let wb = xl.generate_workbook(this.process, this.process_ids, this.metadata, this.metadata_ids)
-      let tmp_path = 'tmp/sheet.xlsx'
-      fs.open(tmp_path, 'w', function() {
-
-      });
+      let filename = 'report_' + now.getTime() + '.xlsx'
+      let tmp_path = tempy.file({name: filename})
+      fs.open(tmp_path, 'w', function() {})
       wb.xlsx.writeFile(tmp_path)
       .then(function() {
         let win = require('electron').remote.getCurrentWindow()
-        // try{
-        //   electrondl.download(win, tmp_path, {filename: 'test.xlsx'})
-        // }
+        let save_to = dialog.showSaveDialog(win, {defaultPath: filename})
+        fs.writeFile(save_to, tmp_path, (err) => {
+          if(err) throw err;
+        })
       });
     }
   }
