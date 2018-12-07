@@ -107,9 +107,14 @@ export default {
       .then(function() {
         let win = require('electron').remote.getCurrentWindow()
         let save_to = dialog.showSaveDialog(win, {defaultPath: filename})
-        fs.writeFile(save_to, tmp_path, (err) => {
-          if(err) throw err;
-        })
+        if(save_to){
+          fs.writeFile(save_to, tmp_path, (err) => {
+            if(err) throw err;
+          })
+        }
+        else {
+          console.log('file save operation canceled')
+        }
       });
     }
   }
