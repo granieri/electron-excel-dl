@@ -115,10 +115,10 @@ export default {
       let fs_stream = fs.createWriteStream(tmp_path)
       wb.xlsx.write(fs_stream)
       .then(function() {
-        let win = require('electron').remote.getCurrentWindow()
+        let win = remote.getCurrentWindow()
         let save_to = dialog.showSaveDialog(win, {defaultPath: filename})
         if(save_to){
-          fs.createReadStream(tmp_path).pipe(fs.createWriteStream(save_to));
+          fs.createReadStream(tmp_path).pipe(fs.createWriteStream(save_to))
         }
         else {
           console.log('file save operation canceled')
