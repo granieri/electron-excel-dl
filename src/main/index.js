@@ -1,11 +1,5 @@
 import { app, BrowserWindow, dialog } from 'electron'
-require('electron-dl')({saveAs: true});
 
-
-/**
- * Set `__static` path to static files in production
- * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
- */
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
@@ -16,9 +10,6 @@ const winURL = process.env.NODE_ENV === 'development'
   : `file://${__dirname}/index.html`
 
 function createWindow () {
-  /**
-   * Initial window options
-   */
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
@@ -32,22 +23,6 @@ function createWindow () {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
-
-  mainWindow.webContents.session.on('will-download', (event, downloadItem, webContents) => {
-
-    var fileName = dialog.showSaveDialog({
-      defaultPath: defaultFileName,
-      filters: [
-        { name: 'Excel', extensions: ['xlsx'] }]
-    });
-
-    if (typeof fileName == "undefined") {
-      downloadItem.cancel()
-    }
-    else {
-      downloadItem.setSavePath(fileName);
-    }
-  });
 }
 
 app.on('ready', createWindow)

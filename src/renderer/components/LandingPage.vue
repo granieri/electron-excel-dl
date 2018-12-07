@@ -45,7 +45,6 @@
 
 <script>
 import * as xl from '../excel'
-//import electrondl from 'electron-dl'
 import exceljs from 'exceljs'
 import fs from 'fs'
 import tempy from 'tempy'
@@ -92,9 +91,6 @@ export default {
     }
   },
   methods: {
-    open (link) {
-      this.$electron.shell.openExternal(link)
-    },
     excelize() {
       const remote = require('electron').remote
       const {dialog} = remote.require('electron')
@@ -127,15 +123,15 @@ export default {
         else {
           console.log('file save operation canceled')
         }
-      });
+      })
     }
   }
 }
 </script>
 
 <style>
-body {
-  font-family: 'Roboto', sans-serif;
+thead {
+  font-weight: bold;
 }
 
 td {
