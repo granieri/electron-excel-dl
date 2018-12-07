@@ -1,6 +1,6 @@
 <template>
 <div class="wrapper">
-  <button>make</button>
+  <button @click="excelize()">make</button>
   <h2>processes</h2>
   <table>
     <thead>
@@ -45,6 +45,9 @@
 
 <script>
 import * as xl from '../excel'
+import electrondl from 'electron-dl'
+import exceljs from 'exceljs'
+import fs from 'fs'
 
 export default {
   name: 'landing-page',
@@ -89,6 +92,20 @@ export default {
   methods: {
     open (link) {
       this.$electron.shell.openExternal(link)
+    },
+    excelize() {
+      let wb = xl.generate_workbook(this.process, this.process_ids, this.metadata, this.metadata_ids)
+      let tmp_path = 'tmp/sheet.xlsx'
+      fs.open(tmp_path, 'w', function() {
+
+      });
+      wb.xlsx.writeFile(tmp_path)
+      .then(function() {
+        let win = require('electron').remote.getCurrentWindow()
+        // try{
+        //   electrondl.download(win, tmp_path, {filename: 'test.xlsx'})
+        // }
+      });
     }
   }
 }

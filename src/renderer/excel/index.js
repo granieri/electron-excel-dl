@@ -1,6 +1,6 @@
 import exceljs from 'exceljs'
 
-export function generate_workbook() {
+export function generate_workbook(process, process_ids, metadata, metadata_ids) {
   const now = new Date();
   const wb = new exceljs.Workbook()
 
@@ -20,11 +20,11 @@ export function generate_workbook() {
     { header: 'Lagging flag', key: 'lf', width: 15 }
   ];
 
-  const process_streaming_table_col = process_streaming_ws.getColumn('job')
-  const process_streaming_status_col = process_streaming_ws.getColumn('status')
-  const process_streaming_runtime_col = process_streaming_ws.getColumn('runtime')
-  const process_streaming_lf_col = process_streaming_ws.getColumn('lf')
-  const process_streaming_hrf_col = process_streaming_ws.getColumn('hrf')
+  const process_streaming_table_col = process_streaming_ws.getColumn('A')
+  const process_streaming_status_col = process_streaming_ws.getColumn('B')
+  const process_streaming_runtime_col = process_streaming_ws.getColumn('C')
+  const process_streaming_lf_col = process_streaming_ws.getColumn('D')
+  const process_streaming_hrf_col = process_streaming_ws.getColumn('E')
 
   process_streaming_table_col.header = 'Job'
   process_streaming_status_col.header = 'Status'
@@ -33,13 +33,14 @@ export function generate_workbook() {
   process_streaming_hrf_col.header = 'Lagging flag'
 
   for(let job in process_ids){
-    let name = process[job].NAME
-    let status = process[job].STATUS
-    let start_ts = new Date(process[job].START_TIME)
-    let end_ts = new Date(process[job].END_TIME + 'Z')
-    let runtime = Boolean(end_ts) ?  end_ts - start_ts:now.getTime() - start_ts
+    let id = process_ids[job]
+    let name = process[id].NAME
+    let status = process[id].STATUS
+    let start_ts = new Date(process[id].START_TIME)
+    let end_ts = new Date(process[id].END_TIME + 'Z')
+    let runtime = Boolean(process[id].END_TIME) ?  end_ts.getTime() - start_ts:now.getTime() - start_ts.getTime()
     let hrf = runtime > 15 ? 1:0
-    let lf = process[job].LAGGING ? 1:0
+    let lf = process[id].LAGGING ? 1:0
     process_streaming_ws.addRow([name, status, runtime, hrf, lf]);
   }
 
@@ -54,11 +55,11 @@ export function generate_workbook() {
     { header: 'Lagging flag', key: 'lf', width: 15 }
   ];
 
-  const metadata_streaming_table_col = metadata_streaming_ws.getColumn('job')
-  const metadata_streaming_status_col = metadata_streaming_ws.getColumn('status')
-  const metadata_streaming_runtime_col = metadata_streaming_ws.getColumn('runtime')
-  const metadata_streaming_lf_col = metadata_streaming_ws.getColumn('hrf')
-  const metadata_streaming_hrf_col = metadata_streaming_ws.getColumn('lf')
+  const metadata_streaming_table_col = metadata_streaming_ws.getColumn('A')
+  const metadata_streaming_status_col = metadata_streaming_ws.getColumn('B')
+  const metadata_streaming_runtime_col = metadata_streaming_ws.getColumn('C')
+  const metadata_streaming_lf_col = metadata_streaming_ws.getColumn('D')
+  const metadata_streaming_hrf_col = metadata_streaming_ws.getColumn('E')
 
   metadata_streaming_table_col.header = 'Job'
   metadata_streaming_status_col.header = 'Status'
@@ -67,13 +68,16 @@ export function generate_workbook() {
   metadata_streaming_hrf_col.header = 'Lagging flag'
 
   for(let job in metadata_ids){
-    let name = metadata[job].NAME
-    let status = metadata[job].STATUS
-    let start_ts = new Date(metadata[job].START_TIME + 'Z')
-    let end_ts = new Date(metadata[job].END_TIME + 'Z')
-    let runtime = Boolean(end_ts) ?  end_ts - start_ts:now.getTime() - start_ts
+    let id = metadata_ids[job]
+    let name = metadata[id].NAME
+    let status = metadata[id].STATUS
+    let start_ts = new Date(metadata[id].START_TIME + 'Z')
+    let end_ts = new Date(metadata[id].END_TIME + 'Z')
+    let runtime = Boolean(metadata[id].END_TIME) ?  end_ts.getTime() - start_ts:now.getTime() - start_ts.getTime()
     let hrf = runtime > 15 ? 1:0
-    let lf = metadata[job].LAGGING ? 1:0
+    let lf = metadata[id].LAGGING ? 1:0
     metadata_streaming_ws.addRow([name, status, runtime, hrf, lf]);
   }
+
+  return wb
 }
