@@ -5,32 +5,23 @@ export function generate_workbook(tasks) {
   const wb = new exceljs.Workbook()
 
   wb.creator = 'Exceltron app'
-  wb.lastModifiedBy = 'Exceltron'
+  wb.lastModifiedBy = 'Exceltron app'
   wb.created = now
   wb.modified = now
 
   for(let i in tasks){
     const task = tasks[i]
     const ws = wb.addWorksheet(task.taskname, {})
+    const header_font = { bold: true }
     ws.columns = [
       { header: 'Job', key: 'table', width: 35 },
       { header: 'Status', key: 'status', width: 15 },
       { header: 'Runtime', key: 'runtime', width: 12 },
-      { header: 'High runtime flag', key: 'hrf', width: 15 },
+      { header: 'High runtime flag', key: 'hrf', width: 16 },
       { header: 'Lagging flag', key: 'lf', width: 15 }
     ];
 
-    const table_col = ws.getColumn('A')
-    const status_col = ws.getColumn('B')
-    const runtime_col = ws.getColumn('C')
-    const lf_col = ws.getColumn('D')
-    const hrf_col = ws.getColumn('E')
-
-    table_col.header = 'Job'
-    status_col.header = 'Status'
-    runtime_col.header = 'Runtime'
-    lf_col.header = 'High runtime flag'
-    hrf_col.header = 'Lagging flag'
+    ws.getRow(1).font = header_font
 
     for(let job in task.ids){
       let id = task.ids[job]
