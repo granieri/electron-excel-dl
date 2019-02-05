@@ -1,4 +1,5 @@
 # Exceltron
+[blog post about this](https://ranieri.neocities.org/blog/?p=electron-dialog)
 
 Dummy Electron app that generates an Excel workbook from component data and saves it to the user's disk. I made this as part of a larger task monitoring app. It got its own repo because I wanted to test it in an isolated environment since I am new to Electron and hadn't used [dialogs](https://electronjs.org/docs/api/dialog) before (or Node's fs for that matter). 
 
