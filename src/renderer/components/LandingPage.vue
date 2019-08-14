@@ -113,6 +113,7 @@ export default {
       let filename = 'report_' + now.getTime() + '.xlsx'
       let tmp_path = tempy.file({name: filename})
       let fs_stream = fs.createWriteStream(tmp_path)
+      console.log(tmp_path)
       wb.xlsx.write(fs_stream)
       .then(function() {
         let win = remote.getCurrentWindow()
