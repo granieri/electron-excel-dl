@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "axios": "^0.18.1",
-    "exceljs": "^1.6.3",
+    "exceljs": "^1.15.0",
     "tempy": "^0.2.1",
     "vue": "^2.5.16",
     "vue-electron": "^1.0.6",
